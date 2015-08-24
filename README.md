@@ -125,7 +125,7 @@ Returns an array of A records
 
 >bool|array a()
 
-Returns an array of A records containing details of the record type, ttl, ipv4 address and the host address. This function returns false on failure and an empty array when no records are found.
+Returns an array of A records containing details of the record type, ttl, ipv4 address and the host address. This method returns false on failure and an empty array when no records are found.
 
 **Example**
 
@@ -150,7 +150,7 @@ Returns an array of A records
 
 >bool|array aaaa()
 
-Returns an array of AAAA records containing details of the record type, ttl, ipv6 address and the host address. This function returns false on failure and an empty array when no records are found.
+Returns an array of AAAA records containing details of the record type, ttl, ipv6 address and the host address. This method returns false on failure and an empty array when no records are found.
 
 **Example**
 
@@ -175,7 +175,7 @@ Returns an array of MX records
 
 >bool|array mx()
 
-Returns an array of MX records containing details of the record type, ttl, priority, target domain and the host address. This function returns false on failure and an empty array when no records are found.
+Returns an array of MX records containing details of the record type, ttl, priority, target domain and the host address. This method returns false on failure and an empty array when no records are found.
 
 **Example**
 
@@ -201,7 +201,7 @@ Returns an array of TXT records
 
 >bool|array txt()
 
-Returns an array of TXT records containing details of the record type, ttl, txt value and the host address. This function returns false on failure and an empty array when no records are found.
+Returns an array of TXT records containing details of the record type, ttl, txt value and the host address. This method returns false on failure and an empty array when no records are found.
 
 **Example**
 
@@ -226,7 +226,7 @@ Returns an array of NS (name server) records
 
 >bool|array ns()
 
-Returns an array of NS records containing details of the record type, ttl, target domain and the host address. This function returns false on failure and an empty array when no records are found.
+Returns an array of NS records containing details of the record type, ttl, target domain and the host address. This method returns false on failure and an empty array when no records are found.
 
 **Example**
 
@@ -257,7 +257,7 @@ Returns an array of CNAME records
 
 >bool|array cname()
 
-Returns an array of NS records containing details of the record type, ttl, target domain and the host address. This function returns false on failure and an empty array when no records are found.
+Returns an array of NS records containing details of the record type, ttl, target domain and the host address. This method returns false on failure and an empty array when no records are found.
 
 **Example**
 
