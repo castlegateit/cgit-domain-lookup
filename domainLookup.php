@@ -310,7 +310,7 @@ class domainLookup
      *
      * @var string
      */
-    protected $ns_whitelist;
+    protected $ns_whitelist = false;
 
     /**
      * Sets the domain name for the lookup functions
@@ -318,7 +318,7 @@ class domainLookup
      * @param  string $domain
      * @return void
      */
-    public function __construct($domain, $ns_whitelist = 'nameservers.json')
+    public function __construct($domain, $ns_whitelist = false)
     {
         // Set the member variable
         $this->domain = $domain;
@@ -605,11 +605,11 @@ class domainLookup
             // Get the last match
             if ($matches) {
 
-                $this->updated = trim(end($matches));
+                $this->updated = strtotime(trim(end($matches)));
             }
         }
 
-        return strtotime($this->updated);
+        return $this->updated;
     }
 
     /**
@@ -642,11 +642,11 @@ class domainLookup
             // Get the last match
             if ($matches) {
 
-                $this->created = trim(end($matches));
+                $this->created = strtotime(trim(end($matches)));
             }
         }
 
-        return strtotime($this->created);
+        return $this->created;
     }
 
     /**
@@ -679,11 +679,11 @@ class domainLookup
             // Get the last match
             if ($matches) {
 
-                $this->expiry = trim(end($matches));
+                $this->expiry = strtotime(trim(end($matches)));
             }
         }
 
-        return strtotime($this->expiry);
+        return $this->expiry;
     }
 
     /**
@@ -797,33 +797,36 @@ class domainLookup
         }
 
         // Begin by checking a whitelist since some companies share nameservers
-        if (file_exists($this->ns_whitelist)) {
+        if ($this->ns_whitelist) {
 
-            // Load the whitelist
-            $whitelist = json_decode(file_get_contents($this->ns_whitelist));
+            if (file_exists($this->ns_whitelist)) {
+
+                // Load the whitelist
+                $whitelist = json_decode(file_get_contents($this->ns_whitelist));
 
 
-            // Check for valid JSON
-            if (!$whitelist || !is_array($whitelist)) {
-                throw new \Exception($this->exception . 'White list file is not valid json');
-            };
+                // Check for valid JSON
+                if (!$whitelist || !is_array($whitelist)) {
+                    throw new \Exception($this->exception . 'White list file is not valid json');
+                };
 
-            // Extract the `target` key from the array of nameservers
-            $nameservers = array_map(function($a){return $a['target'];}, $nameservers);
+                // Extract the `target` key from the array of nameservers
+                $nameservers = array_map(function($a){return $a['target'];}, $nameservers);
 
-            // Find a match
-            foreach ($whitelist as $white_ns) {
-                foreach ($white_ns->records as $value) {
-                    foreach ($nameservers as $nameserver) {
-                        if ($nameserver == $value) {
-                            return $white_ns->name;;
+                // Find a match
+                foreach ($whitelist as $white_ns) {
+                    foreach ($white_ns->records as $value) {
+                        foreach ($nameservers as $nameserver) {
+                            if ($nameserver == $value) {
+                                return $white_ns->name;;
+                            }
                         }
                     }
                 }
             }
-        }
-        else {
-            throw new \Exception($this->exception . 'Whitelist file does not exist');
+            else {
+                throw new \Exception($this->exception . 'Whitelist file does not exist');
+            }
         }
 
         // If we've reached this far, there is no whitelist or selection from it
@@ -845,36 +848,18 @@ class domainLookup
         return $this->nameservers;
     }
 
-
-
-
-
-
-
-
-
-
+    /**
+     * Send a WHOIS query
+     *
+     * @return string
+     */
     public function whois()
     {
         if (!$this->whois) {
 
             // Query the whois servers
-            $result = $this->queryWhois();
-
-            if ($result) {
-
+            if ($result = $this->queryWhois()) {
                 $this->whois = $result;
- /*                   'raw'          => $result,
-                    'registrant'    => $this->whoisParse('registrant', $result),
-                    'company_no'   => $this->whoisParse('company_no', $result),
-                    'locked'       => (bool)stristr($result, 'clientTransferProhibited'),
-                    'date_updated' => date('d/m/Y', strtotime($this->whoisParse('updated', $result))),
-                    'date_created' => date('d/m/Y', strtotime($this->whoisParse('created', $result))),
-                    'date_expires' => date('d/m/Y', strtotime($this->whoisParse('expires', $result))),
-                    'unix_updated' => strtotime($this->whoisParse('updated', $result)),
-                    'unix_created' => strtotime($this->whoisParse('created', $result)),
-                    'unix_expires' => strtotime($this->whoisParse('expires', $result))
-                );*/
             }
         }
 
