@@ -520,7 +520,7 @@ class domainLookup
 
             // Extract the registrar
             preg_match(
-                '#registrar:\s+(.*)\s(?=\[)?#',
+                '#(?:sponsoring\s)registrar:\s*(.*)\s(?=\[)?#',
                 strtolower($this->whois),
                 $matches
             );
@@ -718,7 +718,7 @@ class domainLookup
 
             // Extract the registrar
             preg_match(
-                '#registrant:\s+(.*)\s(?=\[)?#',
+                '#registrant(?:\sname)?:\s*(.*)\s(?=\[)?#',
                 strtolower($this->whois),
                 $matches
             );
