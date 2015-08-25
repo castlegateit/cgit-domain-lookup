@@ -125,64 +125,64 @@ class domainLookup
         'no.com' => 'whois.centralnic.com',
         'nu' => 'whois.nic.nu',
         'nz' => 'whois.srs.net.nz',
-        'org' => 'whois.pir.org',
-        'pl' => 'whois.dns.pl',
-        'pr' => 'whois.nic.pr',
-        'pro' => 'whois.registrypro.pro',
-        'pt' => 'whois.dns.pt',
-        'pw' => 'whois.nic.pw',
-        'ro' => 'whois.rotld.ro',
-        'ru' => 'whois.tcinet.ru',
-        'sa' => 'saudinic.net.sa',
+        'org'    => 'whois.pir.org',
+        'pl'     => 'whois.dns.pl',
+        'pr'     => 'whois.nic.pr',
+        'pro'    => 'whois.registrypro.pro',
+        'pt'     => 'whois.dns.pt',
+        'pw'     => 'whois.nic.pw',
+        'ro'     => 'whois.rotld.ro',
+        'ru'     => 'whois.tcinet.ru',
+        'sa'     => 'saudinic.net.sa',
         'sa.com' => 'whois.centralnic.com',
-        'sb' => 'whois.nic.net.sb',
-        'sc' => 'whois2.afilias-grs.net',
-        'se' => 'whois.nic-se.se',
+        'sb'     => 'whois.nic.net.sb',
+        'sc'     => 'whois2.afilias-grs.net',
+        'se'     => 'whois.nic-se.se',
         'se.com' => 'whois.centralnic.com',
         'se.net' => 'whois.centralnic.com',
-        'sg' => 'whois.nic.net.sg',
-        'sh' => 'whois.nic.sh',
-        'si' => 'whois.arnes.si',
-        'sk' => 'whois.sk-nic.sk',
-        'sm' => 'whois.nic.sm',
-        'st' => 'whois.nic.st',
-        'so' => 'whois.nic.so',
-        'su' => 'whois.tcinet.ru',
-        'tc' => 'whois.adamsnames.tc',
-        'tel' => 'whois.nic.tel',
-        'tf' => 'whois.nic.tf',
-        'th' => 'whois.thnic.net',
-        'tj' => 'whois.nic.tj',
-        'tk' => 'whois.nic.tk',
-        'tl' => 'whois.domains.tl',
-        'tm' => 'whois.nic.tm',
-        'tn' => 'whois.ati.tn',
-        'to' => 'whois.tonic.to',
-        'tp' => 'whois.domains.tl',
-        'tr' => 'whois.nic.tr',
+        'sg'     => 'whois.nic.net.sg',
+        'sh'     => 'whois.nic.sh',
+        'si'     => 'whois.arnes.si',
+        'sk'     => 'whois.sk-nic.sk',
+        'sm'     => 'whois.nic.sm',
+        'st'     => 'whois.nic.st',
+        'so'     => 'whois.nic.so',
+        'su'     => 'whois.tcinet.ru',
+        'tc'     => 'whois.adamsnames.tc',
+        'tel'    => 'whois.nic.tel',
+        'tf'     => 'whois.nic.tf',
+        'th'     => 'whois.thnic.net',
+        'tj'     => 'whois.nic.tj',
+        'tk'     => 'whois.nic.tk',
+        'tl'     => 'whois.domains.tl',
+        'tm'     => 'whois.nic.tm',
+        'tn'     => 'whois.ati.tn',
+        'to'     => 'whois.tonic.to',
+        'tp'     => 'whois.domains.tl',
+        'tr'     => 'whois.nic.tr',
         'travel' => 'whois.nic.travel',
-        'tw' => 'whois.twnic.net.tw',
-        'tv' => 'whois.nic.tv',
-        'tz' => 'whois.tznic.or.tz',
-        'ua' => 'whois.ua',
-        'uk' => 'whois.nic.uk',
+        'tw'     => 'whois.twnic.net.tw',
+        'tv'     => 'whois.nic.tv',
+        'tz'     => 'whois.tznic.or.tz',
+        'ua'     => 'whois.ua',
+        'uk'     => 'whois.nic.uk',
         'uk.com' => 'whois.centralnic.com',
         'uk.net' => 'whois.centralnic.com',
-        'ac.uk' => 'whois.ja.net',
+        'ac.uk'  => 'whois.ja.net',
         'org.uk' => 'whois.nic.uk',
         'gov.uk' => 'whois.ja.net',
-        'us' => 'whois.nic.us',
+        'us'     => 'whois.nic.us',
         'us.com' => 'whois.centralnic.com',
-        'uy' => 'nic.uy',
+        'uy'     => 'nic.uy',
         'uy.com' => 'whois.centralnic.com',
-        'uz' => 'whois.cctld.uz',
-        'va' => 'whois.ripe.net',
-        'vc' => 'whois2.afilias-grs.net',
-        've' => 'whois.nic.ve',
-        'vg' => 'whois.adamsnames.tc',
-        'ws' => 'whois.website.ws',
-        'xxx' => 'whois.nic.xxx',
-        'yu' => 'whois.ripe.net',
+        'uz'     => 'whois.cctld.uz',
+        'va'     => 'whois.ripe.net',
+        'vc'     => 'whois2.afilias-grs.net',
+        've'     => 'whois.nic.ve',
+        'vg'     => 'whois.adamsnames.tc',
+        'ws'     => 'whois.website.ws',
+        'xxx'    => 'whois.nic.xxx',
+        'yu'     => 'whois.ripe.net',
         'za.com' => 'whois.centralnic.com'
     );
 
@@ -521,7 +521,7 @@ class domainLookup
             // Extract the registrar
             preg_match(
                 '#registrar:\s+(.*)\s(?=\[)?#',
-                strtolower($whois),
+                strtolower($this->whois),
                 $matches
             );
 
@@ -811,14 +811,17 @@ class domainLookup
                 };
 
                 // Extract the `target` key from the array of nameservers
-                $nameservers = array_map(function($a){return $a['target'];}, $nameservers);
+                $real_nameservers = array_map(function($a){return $a['target'];}, $nameservers);
 
                 // Find a match
-                foreach ($whitelist as $white_ns) {
-                    foreach ($white_ns->records as $value) {
-                        foreach ($nameservers as $nameserver) {
-                            if ($nameserver == $value) {
-                                return $white_ns->name;;
+                foreach ($whitelist as $whitelist_company) {
+                    if (is_array($whitelist_company)) {
+                        foreach ($whitelist_company as $whitelist_ns) {
+                            var_dump($whitelist_ns);
+                            foreach ($real_nameservers as $nameserver) {
+                                if ($nameserver == $value) {
+                                    return $white_ns->name;
+                                }
                             }
                         }
                     }
