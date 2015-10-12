@@ -1,130 +1,128 @@
-<?php
+<?php namespace CastlegateIt\Tools;
 
-namespace Cgit;
-
-class domainLookup
+class DomainLookup
 {
     /**
-     * Whois server for TLD
+     * Whois server for support TLDs
      *
      * @var array
      */
-    protected $whois_servers = array(
-        'ac' => 'whois.nic.ac',
-        'ae' => 'whois.aeda.net.ae',
-        'aero' => 'whois.aero',
-        'af' => 'whois.nic.af',
-        'ag' => 'whois.nic.ag',
-        'al' => 'whois.ripe.net',
-        'am' => 'whois.amnic.net',
-        'as' => 'whois.nic.as',
-        'asia' => 'whois.nic.asia',
-        'at' => 'whois.nic.at',
-        'au' => 'whois.aunic.net',
-        'ax' => 'whois.ax',
-        'az' => 'whois.ripe.net',
-        'ba' => 'whois.ripe.net',
-        'be' => 'whois.dns.be',
-        'bg' => 'whois.register.bg',
-        'bi' => 'whois.nic.bi',
-        'biz' => 'whois.neulevel.biz',
-        'bj' => 'www.nic.bj',
-        'br' => 'whois.nic.br',
+    private $whois_servers = array(
+        'ac'     => 'whois.nic.ac',
+        'ae'     => 'whois.aeda.net.ae',
+        'aero'   => 'whois.aero',
+        'af'     => 'whois.nic.af',
+        'ag'     => 'whois.nic.ag',
+        'al'     => 'whois.ripe.net',
+        'am'     => 'whois.amnic.net',
+        'as'     => 'whois.nic.as',
+        'asia'   => 'whois.nic.asia',
+        'at'     => 'whois.nic.at',
+        'au'     => 'whois.aunic.net',
+        'ax'     => 'whois.ax',
+        'az'     => 'whois.ripe.net',
+        'ba'     => 'whois.ripe.net',
+        'be'     => 'whois.dns.be',
+        'bg'     => 'whois.register.bg',
+        'bi'     => 'whois.nic.bi',
+        'biz'    => 'whois.neulevel.biz',
+        'bj'     => 'www.nic.bj',
+        'br'     => 'whois.nic.br',
         'br.com' => 'whois.centralnic.com',
-        'bt' => 'whois.netnames.net',
-        'by' => 'whois.cctld.by',
-        'bz' => 'whois.belizenic.bz',
-        'ca' => 'whois.cira.ca',
-        'cat' => 'whois.cat',
-        'cc' => 'whois.nic.cc',
-        'cd' => 'whois.nic.cd',
-        'ch' => 'whois.nic.ch',
-        'ck' => 'whois.nic.ck',
-        'cl' => 'whois.nic.cl',
-        'cn' => 'whois.cnnic.net.cn',
+        'bt'     => 'whois.netnames.net',
+        'by'     => 'whois.cctld.by',
+        'bz'     => 'whois.belizenic.bz',
+        'ca'     => 'whois.cira.ca',
+        'cat'    => 'whois.cat',
+        'cc'     => 'whois.nic.cc',
+        'cd'     => 'whois.nic.cd',
+        'ch'     => 'whois.nic.ch',
+        'ck'     => 'whois.nic.ck',
+        'cl'     => 'whois.nic.cl',
+        'cn'     => 'whois.cnnic.net.cn',
         'cn.com' => 'whois.centralnic.com',
-        'co' => 'whois.nic.co',
-        'co.uk' => 'whois.nic.uk',
-        'co.nl' => 'whois.co.nl',
-        'com' => 'whois.verisign-grs.com',
-        'coop' => 'whois.nic.coop',
-        'cx' => 'whois.nic.cx',
-        'cy' => 'whois.ripe.net',
-        'cz' => 'whois.nic.cz',
-        'de' => 'whois.denic.de',
-        'dk' => 'whois.dk-hostmaster.dk',
-        'dm' => 'whois.nic.cx',
-        'dz' => 'whois.nic.dz',
-        'edu' => 'whois.educause.net',
-        'ee' => 'whois.tld.ee',
-        'eg' => 'whois.ripe.net',
-        'es' => 'whois.nic.es',
-        'eu' => 'whois.eu',
+        'co'     => 'whois.nic.co',
+        'co.uk'  => 'whois.nic.uk',
+        'co.nl'  => 'whois.co.nl',
+        'com'    => 'whois.verisign-grs.com',
+        'coop'   => 'whois.nic.coop',
+        'cx'     => 'whois.nic.cx',
+        'cy'     => 'whois.ripe.net',
+        'cz'     => 'whois.nic.cz',
+        'de'     => 'whois.denic.de',
+        'dk'     => 'whois.dk-hostmaster.dk',
+        'dm'     => 'whois.nic.cx',
+        'dz'     => 'whois.nic.dz',
+        'edu'    => 'whois.educause.net',
+        'ee'     => 'whois.tld.ee',
+        'eg'     => 'whois.ripe.net',
+        'es'     => 'whois.nic.es',
+        'eu'     => 'whois.eu',
         'eu.com' => 'whois.centralnic.com',
-        'fi' => 'whois.ficora.fi',
-        'fo' => 'whois.nic.fo',
-        'fr' => 'whois.nic.fr',
-        'gb' => 'whois.ripe.net',
+        'fi'     => 'whois.ficora.fi',
+        'fo'     => 'whois.nic.fo',
+        'fr'     => 'whois.nic.fr',
+        'gb'     => 'whois.ripe.net',
         'gb.com' => 'whois.centralnic.com',
         'gb.net' => 'whois.centralnic.com',
         'qc.com' => 'whois.centralnic.com',
-        'ge' => 'whois.ripe.net',
-        'gl' => 'whois.nic.gl',
-        'gm' => 'whois.ripe.net',
-        'gov' => 'whois.nic.gov',
-        'gr' => 'whois.ripe.net',
-        'gs' => 'whois.nic.gs',
-        'hk' => 'whois.hknic.net.hk',
-        'hm' => 'whois.registry.hm',
-        'hn' => 'whois2.afilias-grs.net',
-        'hr' => 'whois.dns.hr',
-        'hu' => 'whois.nic.hu',
+        'ge'     => 'whois.ripe.net',
+        'gl'     => 'whois.nic.gl',
+        'gm'     => 'whois.ripe.net',
+        'gov'    => 'whois.nic.gov',
+        'gr'     => 'whois.ripe.net',
+        'gs'     => 'whois.nic.gs',
+        'hk'     => 'whois.hknic.net.hk',
+        'hm'     => 'whois.registry.hm',
+        'hn'     => 'whois2.afilias-grs.net',
+        'hr'     => 'whois.dns.hr',
+        'hu'     => 'whois.nic.hu',
         'hu.com' => 'whois.centralnic.com',
-        'id' => 'whois.pandi.or.id',
-        'ie' => 'whois.domainregistry.ie',
-        'il' => 'whois.isoc.org.il',
-        'in' => 'whois.inregistry.net',
-        'info' => 'whois.afilias.info',
-        'int' => 'whois.isi.edu',
-        'io' => 'whois.nic.io',
-        'iq' => 'vrx.net',
-        'ir' => 'whois.nic.ir',
-        'is' => 'whois.isnic.is',
-        'it' => 'whois.nic.it',
-        'je' => 'whois.je',
-        'jobs' => 'jobswhois.verisign-grs.com',
-        'jp' => 'whois.jprs.jp',
-        'ke' => 'whois.kenic.or.ke',
-        'kg' => 'whois.domain.kg',
-        'kr' => 'whois.nic.or.kr',
-        'la' => 'whois2.afilias-grs.net',
-        'li' => 'whois.nic.li',
-        'lt' => 'whois.domreg.lt',
-        'lu' => 'whois.restena.lu',
-        'lv' => 'whois.nic.lv',
-        'ly' => 'whois.lydomains.com',
-        'ma' => 'whois.iam.net.ma',
-        'mc' => 'whois.ripe.net',
-        'md' => 'whois.nic.md',
-        'me' => 'whois.nic.me',
-        'mil' => 'whois.nic.mil',
-        'mk' => 'whois.ripe.net',
-        'mobi' => 'whois.dotmobiregistry.net',
-        'ms' => 'whois.nic.ms',
-        'mt' => 'whois.ripe.net',
-        'mu' => 'whois.nic.mu',
-        'mx' => 'whois.nic.mx',
-        'my' => 'whois.mynic.net.my',
-        'name' => 'whois.nic.name',
-        'net' => 'whois.verisign-grs.com',
+        'id'     => 'whois.pandi.or.id',
+        'ie'     => 'whois.domainregistry.ie',
+        'il'     => 'whois.isoc.org.il',
+        'in'     => 'whois.inregistry.net',
+        'info'   => 'whois.afilias.info',
+        'int'    => 'whois.isi.edu',
+        'io'     => 'whois.nic.io',
+        'iq'     => 'vrx.net',
+        'ir'     => 'whois.nic.ir',
+        'is'     => 'whois.isnic.is',
+        'it'     => 'whois.nic.it',
+        'je'     => 'whois.je',
+        'jobs'   => 'jobswhois.verisign-grs.com',
+        'jp'     => 'whois.jprs.jp',
+        'ke'     => 'whois.kenic.or.ke',
+        'kg'     => 'whois.domain.kg',
+        'kr'     => 'whois.nic.or.kr',
+        'la'     => 'whois2.afilias-grs.net',
+        'li'     => 'whois.nic.li',
+        'lt'     => 'whois.domreg.lt',
+        'lu'     => 'whois.restena.lu',
+        'lv'     => 'whois.nic.lv',
+        'ly'     => 'whois.lydomains.com',
+        'ma'     => 'whois.iam.net.ma',
+        'mc'     => 'whois.ripe.net',
+        'md'     => 'whois.nic.md',
+        'me'     => 'whois.nic.me',
+        'mil'    => 'whois.nic.mil',
+        'mk'     => 'whois.ripe.net',
+        'mobi'   => 'whois.dotmobiregistry.net',
+        'ms'     => 'whois.nic.ms',
+        'mt'     => 'whois.ripe.net',
+        'mu'     => 'whois.nic.mu',
+        'mx'     => 'whois.nic.mx',
+        'my'     => 'whois.mynic.net.my',
+        'name'   => 'whois.nic.name',
+        'net'    => 'whois.verisign-grs.com',
         'net.uk' => 'whois.nic.uk',
-        'nf' => 'whois.nic.cx',
-        'ng' => 'whois.nic.net.ng',
-        'nl' => 'whois.domain-registry.nl',
-        'no' => 'whois.norid.no',
+        'nf'     => 'whois.nic.cx',
+        'ng'     => 'whois.nic.net.ng',
+        'nl'     => 'whois.domain-registry.nl',
+        'no'     => 'whois.norid.no',
         'no.com' => 'whois.centralnic.com',
-        'nu' => 'whois.nic.nu',
-        'nz' => 'whois.srs.net.nz',
+        'nu'     => 'whois.nic.nu',
+        'nz'     => 'whois.srs.net.nz',
         'org'    => 'whois.pir.org',
         'pl'     => 'whois.dns.pl',
         'pr'     => 'whois.nic.pr',
@@ -191,129 +189,136 @@ class domainLookup
      *
      * @var string
      */
-    protected $exception = 'CGIT Domain Lookup: ';
+    private $exception = 'CGIT Domain Lookup: ';
 
     /**
      * Domain name
      *
      * @var bool|array
      */
-    protected $domain;
+    private $domain;
 
     /**
      * A records
      *
      * @var bool|array
      */
-    protected $a = false;
+    private $a = false;
 
     /**
      * AAAA records
      *
      * @var bool|array
      */
-    protected $aaaa = false;
+    private $aaaa = false;
 
     /**
      * MX records
      *
      * @var bool|array
      */
-    protected $mx = false;
+    private $mx = false;
 
     /**
      * TXT records
      *
      * @var bool|array
      */
-    protected $txt = false;
+    private $txt = false;
 
     /**
      * NS records
      *
      * @var bool|array
      */
-    protected $ns = false;
+    private $ns = false;
 
     /**
      * CNAME records
      *
      * @var bool|array
      */
-    protected $cname = false;
+    private $cname = false;
 
     /**
      * WHOIS information
      *
      * @var bool|string
      */
-    protected $whois = false;
+    private $whois = false;
 
     /**
      * Domain registrar
      *
      * @var bool|string
      */
-    protected $registrar = false;
+    private $registrar = false;
 
     /**
      * Domain registrant
      *
      * @var bool|string
      */
-    protected $registrant = false;
+    private $registrant = false;
 
     /**
      * Domain created date
      *
      * @var bool|int
      */
-    protected $created = false;
+    private $created = false;
 
     /**
      * Domain updated date
      *
      * @var bool|int
      */
-    protected $updated = false;
+    private $updated = false;
 
     /**
      * Domain expiry date
      *
      * @var bool|int
      */
-    protected $expiry = false;
+    private $expiry = false;
 
     /**
      * Domain tag
      *
      * @var bool|string
      */
-    protected $tag = false;
+    private $tag = false;
 
     /**
      * Hosting server registrar
      *
      * @var bool|string
      */
-    protected $hosting = false;
+    private $hosting = false;
+
+    /**
+     * Email server registrar
+     *
+     * @var bool|string
+     */
+    private $email = false;
 
     /**
      * Nameserver registrar
      *
      * @var bool
      */
-    protected $nameservers = false;
+    private $nameservers = false;
 
     /**
      * Path to a whitelist JSON file
      *
      * @var string
      */
-    protected $ns_whitelist = false;
+    private $ns_whitelist = false;
 
     /**
-     * Sets the domain name for the lookup functions
+     * Sets the domain name for the lookup functions.
      *
      * @param  string $domain
      * @return void
@@ -321,7 +326,7 @@ class domainLookup
     public function __construct($domain, $ns_whitelist = false)
     {
         // Set the member variable
-        $this->domain = $domain;
+        $this->domain = trim($domain);
         $this->ns_whitelist = $ns_whitelist;
 
         // Regex for validating domain names
@@ -330,12 +335,12 @@ class domainLookup
 
         // Throw an exception if we did not match
         if (!preg_match($pattern, $domain)) {
-            throw new \Exception($this->exception . 'Domain name is invalid or the TLD is not known');
+            throw new \Exception($this->exception . 'Domain name is invalid or the TLD is not known.');
         }
     }
 
     /**
-     * Returns the TLD portion of the domain
+     * Returns the TLD portion of the domain.
      *
      * @return string
      */
@@ -368,7 +373,7 @@ class domainLookup
     }
 
     /**
-     * Returns the domain name
+     * Returns the domain name.
      *
      * @return string
      */
@@ -378,7 +383,7 @@ class domainLookup
     }
 
     /**
-     * Returns the domain name - minus any subdomains
+     * Returns the domain name - minus any sub-domains.
      *
      * @return string
      */
@@ -397,7 +402,7 @@ class domainLookup
     }
 
     /**
-     * Get the A records
+     * Returns an array of A records
      *
      * @return bool|array
      */
@@ -414,7 +419,7 @@ class domainLookup
     }
 
     /**
-     * Get the AAAA records
+     * Get an array of AAAA records
      *
      * @return bool|array
      */
@@ -431,7 +436,7 @@ class domainLookup
     }
 
     /**
-     * Get the MX records
+     * Get an array of MX records
      *
      * @return bool|array
      */
@@ -448,7 +453,7 @@ class domainLookup
     }
 
     /**
-     * Get the TXT records
+     * Get an array of TXT records
      *
      * @return bool|array
      */
@@ -465,7 +470,7 @@ class domainLookup
     }
 
     /**
-     * Get the NS records
+     * Get and array of NS records
      *
      * @return bool|array
      */
@@ -482,7 +487,7 @@ class domainLookup
     }
 
     /**
-     * Get the CNAME records
+     * Get an array of CNAME records
      *
      * @return bool|array
      */
@@ -499,7 +504,7 @@ class domainLookup
     }
 
     /**
-     * Returns the registrar of the root domain
+     * Returns the registrar of the root domain, extracting it from WHOIS data.
      *
      * @return string
      */
@@ -520,7 +525,7 @@ class domainLookup
 
             // Extract the registrar
             preg_match(
-                '#(?:sponsoring\s)registrar:\s*(.*)\s(?=\[)?#',
+                '#(?:sponsoring\s)?registrar:\s*(.*)\s(?=\[)?#',
                 strtolower($this->whois),
                 $matches
             );
@@ -539,7 +544,7 @@ class domainLookup
     }
 
     /**
-     * Returns tag
+     * Returns the IPS tag.
      *
      * @return string
      */
@@ -576,7 +581,7 @@ class domainLookup
     }
 
     /**
-     * Returns updated time
+     * Returns the domain's updated time.
      *
      * @return string
      */
@@ -613,7 +618,7 @@ class domainLookup
     }
 
     /**
-     * Returns created time
+     * Returns the domain's created time.
      *
      * @return string
      */
@@ -650,7 +655,7 @@ class domainLookup
     }
 
     /**
-     * Returns expiry time
+     * Returns the domain's expiry time.
      *
      * @return string
      */
@@ -687,7 +692,7 @@ class domainLookup
     }
 
     /**
-     * Alias of expiry()
+     * Alias of expiry().
      *
      * @return string
      */
@@ -697,7 +702,7 @@ class domainLookup
     }
 
     /**
-     * Returns the registrant
+     * Returns the domain's registrant.
      *
      * @return string
      */
@@ -736,7 +741,7 @@ class domainLookup
     /**
      * Returns the registrar associated with the hosting (A records) by getting
      * a host name for the A record's IP address. The root domain is then
-     * looked up and a whois performed.
+     * looked up and a whois performed. This is performed on each A record.
      *
      * @return string
      */
@@ -760,7 +765,9 @@ class domainLookup
         $ip = $a_record['ipv4'];
 
         // Attempt to get a host for the IP
-        if (!$host = gethostbyaddr($ip)) {
+        // (fails if the return value is the IP)
+        $host = gethostbyaddr($ip);
+        if ($host == $ip) {
             return false;
         }
 
@@ -779,8 +786,8 @@ class domainLookup
 
     /**
      * Returns the registrar associated with the name servers (NS records) by
-     * looking through a known list. The root domain is then
-     * looked up and a whois performed.
+     * looking through a known list. The root domain is then looked up and a
+     * WHOIS is performed.
      *
      * @return string
      */
@@ -802,25 +809,27 @@ class domainLookup
             if (file_exists($this->ns_whitelist)) {
 
                 // Load the whitelist
-                $whitelist = json_decode(file_get_contents($this->ns_whitelist));
-
+                $whitelists = json_decode(file_get_contents($this->ns_whitelist));
 
                 // Check for valid JSON
-                if (!$whitelist || !is_array($whitelist)) {
+                if (!$whitelists|| !is_array($whitelists)) {
                     throw new \Exception($this->exception . 'White list file is not valid json');
                 };
 
                 // Extract the `target` key from the array of nameservers
                 $real_nameservers = array_map(function($a){return $a['target'];}, $nameservers);
 
-                // Find a match
-                foreach ($whitelist as $whitelist_company) {
-                    if (is_array($whitelist_company)) {
-                        foreach ($whitelist_company as $whitelist_ns) {
-                            var_dump($whitelist_ns);
+
+                // Loop through whitelist companies
+                foreach ($whitelists as $whitelist) {
+                    if (is_object($whitelist)) {
+
+                        // Loop through each whitelist record
+                        foreach ($whitelist->records as $whitelist_record) {
+                            // Compare against actual NS records
                             foreach ($real_nameservers as $nameserver) {
-                                if ($nameserver == $value) {
-                                    return $white_ns->name;
+                                if ($nameserver == $whitelist_record) {
+                                    return $whitelist->name;
                                 }
                             }
                         }
@@ -852,7 +861,62 @@ class domainLookup
     }
 
     /**
-     * Send a WHOIS query
+     * Returns the registrar associated with the domains email. MX records are
+     * checked, and an IP is resolved from the first MX record. The PTR record
+     * is checked to find the IP owner and it's domain is queried via WHOIS to
+     * get the registrant. This does not work well for email with large
+     * corporations who use identity protection companies, who are the
+     * registrant for their domains.
+     *
+     * @return string
+     */
+    public function email()
+    {
+        // Return it if we've already looked it up
+        if ($this->email) {
+            return $this->email;
+        }
+
+        // Get the domain's MX records
+        $mx_records = $this->mx();
+
+        // Fail if there are no records or it's not possible to get them
+        if (!$mx_records) {
+            return false;
+        }
+
+        // Check only the first MX record
+        $first_mx = reset($mx_records);
+        $host = $first_mx['target'];
+
+        // MX records contain a domain name (usually the same domain) such as
+        // mail.example.com so a standard lookup of the domain does not work
+        // here. Resolve the domain to an IP address (gethostbyname) and then
+        // get the PTR record for that IP (gethostbyaddr) to get a domain name
+        // for the mail server. We then lookup the registrar of this domain.
+        $ip = gethostbyname($host);
+        $mail_server = gethostbyaddr($ip);
+
+        // If the mail_server == the IP then there is no PTR record
+        if ($mail_server == $ip) {
+            return false;
+        }
+
+        // Try to create a new instance for this hostname
+        try {
+            $mx = new static($mail_server, $this->ns_whitelist);
+        }
+        catch (Exception $e) {
+            return false;
+        }
+
+        $this->email = $mx->registrar();
+
+        return $this->email;
+    }
+
+    /**
+     * Send a WHOIS query.
      *
      * @return string
      */
@@ -870,7 +934,7 @@ class domainLookup
     }
 
     /**
-     * Performs a whois query to the relevant whois server
+     * Performs a whois query to the relevant whois server.
      *
      * @return string
      */
@@ -902,7 +966,15 @@ class domainLookup
         }
 
         // Send request
-        fputs($socket, $this->rootDomain() . "\r\n");
+
+        // Certain TLDs such as .com may return multiple records, specify an
+        // exact one
+        if ($tld == 'com') {
+            fputs($socket, '=' . $this->rootDomain() . "\r\n");
+        }
+        else {
+            fputs($socket, $this->rootDomain() . "\r\n");
+        }
 
         // Output variable
         $out = "";
@@ -951,5 +1023,3 @@ class domainLookup
         return $array;
     }
 }
-
-?>
