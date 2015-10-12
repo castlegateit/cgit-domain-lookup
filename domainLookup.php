@@ -44,7 +44,7 @@ class DomainLookup
         'co'     => 'whois.nic.co',
         'co.uk'  => 'whois.nic.uk',
         'co.nl'  => 'whois.co.nl',
-        'com'    => 'whois.verisign-grs.com',
+        'com'    => 'whois.tucows.com',
         'coop'   => 'whois.nic.coop',
         'cx'     => 'whois.nic.cx',
         'cy'     => 'whois.ripe.net',
@@ -523,17 +523,29 @@ class DomainLookup
         // WHOIS was successful
         if ($this->whois) {
 
-            // Extract the registrar
+            // 1st extract attempt
+            preg_match(
+                '#(?:Registration\sService\sProvider:\s*)(.*)(?:,)#',
+                $this->whois,
+                $first
+            );
+
+            if ($first && count($first) > 1) {
+                $this->registrar = trim($first[1]);
+                return $this->registrar;
+            }
+
+            // 2nd extract attempt
             preg_match(
                 '#(?:sponsoring\s)?registrar:\s*(.*)\s(?=\[)?#',
                 strtolower($this->whois),
-                $matches
+                $second
             );
 
             // Get the last match
-            if ($matches) {
+            if ($second) {
 
-                $registrar = ucwords(strtolower(end($matches)));
+                $registrar = ucwords(strtolower(end($second)));
 
                 // Remove the ISP tag
                 $this->registrar = trim(preg_replace('#\[.*\]#', '', $registrar));
@@ -778,7 +790,6 @@ class DomainLookup
         catch (Exception $e) {
             return false;
         }
-
         $this->hosting = $hosting->registrar();
 
         return $this->hosting;
@@ -966,15 +977,7 @@ class DomainLookup
         }
 
         // Send request
-
-        // Certain TLDs such as .com may return multiple records, specify an
-        // exact one
-        if ($tld == 'com') {
-            fputs($socket, '=' . $this->rootDomain() . "\r\n");
-        }
-        else {
-            fputs($socket, $this->rootDomain() . "\r\n");
-        }
+        fputs($socket, $this->rootDomain() . "\r\n");
 
         // Output variable
         $out = "";
