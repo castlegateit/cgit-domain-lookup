@@ -17,6 +17,7 @@ The class can be used to lookup the following information:
  - Domain registrant
  - Provider of the hosting as pointed to by A records
  - Provider of the name servers
+ - Provider of the mailboxes
 
 The class will attempt to look up which company is providing the hosting for the current domain, by checking the A records and resolving the IP address to a hostname. A WHOIS query is run on the hostname to provide the registrant. The same process is used to determine the company who controls the name servers.
 
@@ -26,10 +27,11 @@ Where name servers are generic or used by many companies, a whitelist can be pro
 
 The following example shows how you can display the domain registrar, the hosting company and the A records associated with a domain.
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     
     echo $domain->registrar();
     echo $domain->hosting();
+    echo $domain->email();
     var_dump($domain->a());
 
 ## Methods
@@ -53,6 +55,7 @@ The following example shows how you can display the domain registrar, the hostin
 - [registrant()](#registrant) - Get the registrant's name
 - [hosting()](#hosting) - Get the hosting provider's name
 - [nameservers()](#nameservers) - Get the name server provider's name
+- [email()](#email) - Get the mailbox provider's name
 
 ### __construct()
 
@@ -64,7 +67,7 @@ Sets the domain to be used by the lookup functions and specifies a path to a whi
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk', 'nameservers.json');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk', 'nameservers.json');
 
 ***
 
@@ -76,7 +79,7 @@ Returns the TLD of the domain name.
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->tld();
 
 **The example above will output**
@@ -93,7 +96,7 @@ Returns the full domain name.
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->domain();
 
 **The example above will output**
@@ -110,7 +113,7 @@ Returns the full domain name.
 
 **Example**
 
-    $domain = new Cgit\domainLookup('www.castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('www.castlegateit.co.uk');
     echo $domain->rootDomain();
 
 **The example above will output**
@@ -129,7 +132,7 @@ Returns an array of A records containing details of the record type, ttl, ipv4 a
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     var_dump($domain->a());
 
 **The example above will output**
@@ -154,7 +157,7 @@ Returns an array of AAAA records containing details of the record type, ttl, ipv
 
 **Example**
 
-    $domain = new Cgit\domainLookup('google.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('google.co.uk');
     var_dump($domain->aaaa());
 
 **The example above will output**
@@ -179,7 +182,7 @@ Returns an array of MX records containing details of the record type, ttl, prior
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     var_dump($domain->mx());
 
 **The example above will output**
@@ -205,7 +208,7 @@ Returns an array of TXT records containing details of the record type, ttl, txt 
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     var_dump($domain->txt());
 
 **The example above will output**
@@ -230,7 +233,7 @@ Returns an array of NS records containing details of the record type, ttl, targe
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     var_dump($domain->ns());
 
 **The example above will output**
@@ -261,7 +264,7 @@ Returns an array of NS records containing details of the record type, ttl, targe
 
 **Example**
 
-    $domain = new Cgit\domainLookup('mail.google.com');
+    $domain = new CastlegateIt\Tools\DomainLookup('mail.google.com');
     var_dump($domain->cname());
 
 **The example above will output**
@@ -288,7 +291,7 @@ Since this information is obtained via WHOIS data, this method will fail if the 
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->registrar();
 
 **The example above will output**
@@ -309,7 +312,7 @@ Since this information is obtained via WHOIS data, this method will fail if the 
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->tag();
 
 **The example above will output**
@@ -330,7 +333,7 @@ Since this information is obtained via WHOIS data, this method will fail if the 
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->created();
     echo "<br />";
     echo date('d/m/Y', $domain->created());
@@ -354,7 +357,7 @@ Since this information is obtained via WHOIS data, this method will fail if the 
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->updated();
     echo "<br />";
     echo date('d/m/Y', $domain->updated());
@@ -378,7 +381,7 @@ Since this information is obtained via WHOIS data, this method will fail if the 
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->expiry();
     echo "<br />";
     echo date('d/m/Y', $domain->expiry());
@@ -404,7 +407,7 @@ Alias of `expiry()`
 
 Returns the domain's registrant.
 
->bool|str expiry()
+>bool|str registrant()
 
 Returns the domain's registrant as queried from WHOIS data. Returns a string on success and false on failure if WHOIS data cannot be obtained.
 
@@ -412,7 +415,7 @@ Since this information is obtained via WHOIS data, this method will fail if the 
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->registrant();
 
 **The example above will output**
@@ -433,7 +436,7 @@ This method will return a string on success and false on failure. This method wi
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->hosting();
 
 **The example above will output**
@@ -444,17 +447,17 @@ This method will return a string on success and false on failure. This method wi
 
 ### nameservers()
 
-Returns the domain's name server provider.
+Returns the domain's nameserver provider.
 
->bool|str hosting()
+>bool|str nameservers()
 
-Returns the domain's name server provider by checking a whitelist, provided in the class constructor, and then running a WHOIS query on the name server's root domain.
+Returns the domain's nameserver provider by checking a whitelist, provided in the class constructor, and then running a WHOIS query on the name server's root domain.
 
-This method will return a string on success and false on failure. This method will fail if the domain does not name servers or the WHOIS request fails for the name server's root domain.
+This method will return a string on success and false on failure. This method will fail if the domain does not name servers or the WHOIS request fails for the nameserver's root domain.
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->nameservers();
 
 **The example above will output**
@@ -467,7 +470,7 @@ If a whitelist is provided, a name can be associated with nameservers. This is u
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk', 'whitelist.json');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk', 'whitelist.json');
     echo $domain->nameservers();
 
 **The example above will output**
@@ -500,6 +503,27 @@ An exception will be thrown if the whitelist file cannot be opened or cannot be 
 
 ***
 
+### email()
+
+Returns the domain's mailbox provider.
+
+>bool|str email()
+
+Returns the domain's mailbox provider by checking MX records. The first MX record is resolved to an IP address and then a PTR record is checked. The domain name in the PTR record is then looked up via WHOIS and the registrar is returned.
+
+This does not work well for email with large corporations who use identity protection companies, who are the registrant for their domains.
+
+This method will return a string on success and false on failure. This method will fail if the domain does not name servers or the WHOIS request fails for the name server's root domain.
+
+**Example**
+
+    $domain = new CastlegateIt\Tools\DomainLookup('cgit.co.uk');
+    echo $domain->email();
+
+**The example above will output**
+
+    Heart Internet Ltd T/a Heart Internet 
+
 ### whois()
 
 Returns the domain's WHOIS data.
@@ -510,7 +534,7 @@ Returns the domain's WHOIS data. This method will return a string on success and
 
 **Example**
 
-    $domain = new Cgit\domainLookup('castlegateit.co.uk');
+    $domain = new CastlegateIt\Tools\DomainLookup('castlegateit.co.uk');
     echo $domain->whois();
 
 **The example above will output**
