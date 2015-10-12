@@ -114,7 +114,7 @@ class DomainLookup
         'mx'     => 'whois.nic.mx',
         'my'     => 'whois.mynic.net.my',
         'name'   => 'whois.nic.name',
-        'net'    => 'whois.verisign-grs.com',
+        'net'    => 'whois.tucows.com',
         'net.uk' => 'whois.nic.uk',
         'nf'     => 'whois.nic.cx',
         'ng'     => 'whois.nic.net.ng',
