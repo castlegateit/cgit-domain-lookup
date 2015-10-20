@@ -317,9 +317,19 @@ class DomainLookup
      */
     private $ns_whitelist = false;
 
+    /**
+     * Cache directory
+     *
+     * @var string
+     */
     private $cache_dir;
 
-    private $cache_duration = 30;
+    /**
+     * Cache duration in seconds
+     *
+     * @var integer
+     */
+    private $cache_duration;
 
     /**
      * Sets the domain name for the lookup functions.
@@ -327,10 +337,11 @@ class DomainLookup
      * @param  string $domain
      * @return void
      */
-    public function __construct($domain, $cache_dir = '/tmp', $ns_whitelist = false)
+    public function __construct($domain, $cache_dir = '/tmp', $cache_duration = 30, $ns_whitelist = false)
     {
-        // Set cache location
+        // Set cache location and duration
         $this->cache_dir = $cache_dir;
+        $this->cache_duration = $cache_duration;
 
         // Check the cache is writable
         if (!$this->cacheCheck()) {
@@ -799,7 +810,7 @@ class DomainLookup
 
         // Try to create a new instance for this hostname
         try {
-            $hosting = new static($host, $this->cache_dir, $this->ns_whitelist);
+            $hosting = new static($host, $this->cache_dir, $this->cache_duration, $this->ns_whitelist);
         }
         catch (Exception $e) {
             return false;
@@ -874,7 +885,7 @@ class DomainLookup
 
         // Try to create a new instance for this hostname
         try {
-            $ns = new static($host, $this->cache_dir, $this->ns_whitelist);
+            $ns = new static($host, $this->cache_dir, $this->cache_duration, $this->ns_whitelist);
         }
         catch (Exception $e) {
             return false;
@@ -929,7 +940,7 @@ class DomainLookup
 
         // Try to create a new instance for this hostname
         try {
-            $mx = new static($mail_server, $this->cache_dir, $this->ns_whitelist);
+            $mx = new static($mail_server, $this->cache_dir, $this->cache_duration, $this->ns_whitelist);
         }
         catch (Exception $e) {
             return false;
@@ -1046,16 +1057,6 @@ class DomainLookup
         }
 
         return $array;
-    }
-
-    /**
-     * Set the cache duration in seconds
-     *
-     * @param int $seconds
-     * @return void
-     */
-    public function setCacheDuration($seconds) {
-        $this->cache_duration = $seconds;
     }
 
     /**
