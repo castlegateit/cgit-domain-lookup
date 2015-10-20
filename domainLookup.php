@@ -317,14 +317,28 @@ class DomainLookup
      */
     private $ns_whitelist = false;
 
+    private $cache_dir;
+
+    private $cache_duration = 30;
+
     /**
      * Sets the domain name for the lookup functions.
      *
      * @param  string $domain
      * @return void
      */
-    public function __construct($domain, $ns_whitelist = false)
+    public function __construct($domain, $cache_dir = '/tmp', $ns_whitelist = false)
     {
+        // Set cache location
+        $this->cache_dir = $cache_dir;
+
+        // Check the cache is writable
+        if (!$this->cacheCheck()) {
+            throw new \Exception($this->exception . 'Cache directory is not writable (' . $cache_dir . ')');
+        } else {
+            $this->cacheClean();
+        }
+
         // Set the member variable
         $this->domain = trim($domain);
         $this->ns_whitelist = $ns_whitelist;
@@ -785,7 +799,7 @@ class DomainLookup
 
         // Try to create a new instance for this hostname
         try {
-            $hosting = new static($host, $this->ns_whitelist);
+            $hosting = new static($host, $this->cache_dir, $this->ns_whitelist);
         }
         catch (Exception $e) {
             return false;
@@ -860,7 +874,7 @@ class DomainLookup
 
         // Try to create a new instance for this hostname
         try {
-            $ns = new static($host, $this->ns_whitelist);
+            $ns = new static($host, $this->cache_dir, $this->ns_whitelist);
         }
         catch (Exception $e) {
             return false;
@@ -915,7 +929,7 @@ class DomainLookup
 
         // Try to create a new instance for this hostname
         try {
-            $mx = new static($mail_server, $this->ns_whitelist);
+            $mx = new static($mail_server, $this->cache_dir, $this->ns_whitelist);
         }
         catch (Exception $e) {
             return false;
@@ -933,11 +947,19 @@ class DomainLookup
      */
     public function whois()
     {
+        // If we've not already checked in this instance
         if (!$this->whois) {
+
+            // Check the cache first
+            if ($cache = $this->cacheGet('whois-' . $this->domain())) {
+                $this->whois = $cache;
+                return $this->whois;
+            }
 
             // Query the whois servers
             if ($result = $this->queryWhois()) {
                 $this->whois = $result;
+                $this->cacheStore('whois-' . $this->domain(), $result);
             }
         }
 
@@ -1025,4 +1047,101 @@ class DomainLookup
 
         return $array;
     }
+
+    /**
+     * Set the cache duration in seconds
+     *
+     * @param int $seconds
+     * @return void
+     */
+    public function setCacheDuration($seconds) {
+        $this->cache_duration = $seconds;
+    }
+
+    /**
+     * Check the cache is writable
+     *
+     * @return boolean
+     */
+    private function cacheCheck()
+    {
+        return is_writable($this->cache_dir);
+    }
+
+    /**
+     * Check the cache is writable
+     *
+     * @param  string $key
+     * @return string
+     */
+    private function cacheFile($key)
+    {
+        return $this->cache_dir . '/' . $key;
+    }
+
+    /**
+     * Check a cached key exists
+     *
+     * @param  string $key
+     * @return boolean
+     */
+    private function cacheExists($key)
+    {
+        return is_file($this->cacheFile($key));
+    }
+
+    /**
+     * Check if a cached key has expired
+     *
+     * @param  string $key
+     * @return boolean
+     */
+    private function cacheExpired($key)
+    {
+        return (filemtime($this->cacheFile($key)) + $this->cache_duration) < time();
+    }
+
+    /**
+     * Load a cached key's data, or false if the key does not exist
+     *
+     * @param  string $key
+     * @return string|boolean
+     */
+    private function cacheGet($key)
+    {
+        if ($this->cacheExists($key) && !$this->cacheExpired($key)) {
+            return file_get_contents($this->cacheFile($key));
+        }
+
+        return false;
+    }
+
+    /**
+     * Save a value against a cache key
+     *
+     * @param  string $key
+     * @param  string $contents
+     * @return void
+     */
+    private function cacheStore($key, $contents)
+    {
+        file_put_contents($this->cacheFile($key), $contents);
+    }
+
+    /**
+     * Remove any expired cache files
+     *
+     * @return void
+     */
+    private function cacheClean() {
+        if ($handle = opendir($this->cache_dir)) {
+            while (false !== ($key = readdir($handle))) {
+                if ($this->cacheExpired($key) && $key != '.' && $key != '..') {
+                    unlink($this->cacheFile($key));
+                }
+            }
+            closedir($handle);
+        }
+    }
 }
+
