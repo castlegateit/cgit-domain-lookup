@@ -7,7 +7,7 @@ class DomainLookup
      *
      * @var array
      */
-    private $whois_servers = array(
+    static $whois_servers = array(
         'ac'     => 'whois.nic.ac',
         'ae'     => 'whois.aeda.net.ae',
         'aero'   => 'whois.aero',
@@ -355,7 +355,7 @@ class DomainLookup
         $this->ns_whitelist = $ns_whitelist;
 
         // Regex for validating domain names
-        $tld = implode('|', array_keys($this->whois_servers));
+        $tld = implode('|', array_keys(self::$whois_servers));
         $pattern = '#(?:[a-zA-Z0-9.-]+?\.(?:' . $tld . '))$#';
 
         // Throw an exception if we did not match
@@ -374,7 +374,7 @@ class DomainLookup
         $matches = array();
 
         // Search for matches
-        foreach (array_keys($this->whois_servers) as $tld) {
+        foreach (array_keys(self::$whois_servers) as $tld) {
 
             for ($i = strlen($this->domain); $i > 0; $i--) {
 
@@ -991,10 +991,10 @@ class DomainLookup
         $tld = $this->tld($this->domain);
 
         // Check we have a whois server for the TLD
-        if (!isset($this->whois_servers[$tld])) {
+        if (!isset(self::$whois_servers[$tld])) {
             return false;
         }
-        $whois_server = $this->whois_servers[$tld];
+        $whois_server = self::$whois_servers[$tld];
 
         // Open the socket
         $socket = @fsockopen(
