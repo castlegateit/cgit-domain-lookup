@@ -550,7 +550,7 @@ class DomainLookup
 
             // 1st extract attempt
             preg_match(
-                '#(?:Registration\sService\sProvider:\s*)(.*)(?:,)#',
+                '/(?:Registration\sService\sProvider:\s*)(.*)(?:,)/i',
                 $this->whois,
                 $first
             );
@@ -562,7 +562,7 @@ class DomainLookup
 
             // 2nd extract attempt
             preg_match(
-                '#(?:sponsoring\s)?registrar:\s*(.*)\s(?=\[)?#',
+                '/(?:sponsoring\s)?registrar:\s*(.*)\s(?=\[)?/i',
                 strtolower($this->whois),
                 $second
             );
@@ -760,8 +760,8 @@ class DomainLookup
 
             // Extract the registrar
             preg_match(
-                '#registrant(?:\sname)?:\s*(.*)\s(?=\[)?#',
-                strtolower($this->whois),
+                '/registrant(?:\sname)?:\s*(.*)\s(?=\[)?/i',
+                $this->whois,
                 $matches
             );
 
@@ -846,7 +846,6 @@ class DomainLookup
 
                 // Load the whitelist
                 $whitelists = json_decode(file_get_contents($this->ns_whitelist));
-
                 // Check for valid JSON
                 if (!$whitelists|| !is_array($whitelists)) {
                     throw new \Exception($this->exception . 'White list file is not valid json');
