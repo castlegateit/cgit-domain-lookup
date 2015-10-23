@@ -343,7 +343,7 @@ class DomainLookup
         $this->cache_dir = $cache_dir;
         $this->cache_duration = $cache_duration;
 
-        // Check the cache is writable
+        // Check the cache is writeable
         if (!$this->cacheCheck()) {
             throw new \Exception($this->exception . 'Cache directory is not writable (' . $cache_dir . ')');
         } else {
@@ -359,7 +359,7 @@ class DomainLookup
         $pattern = '#(?:[a-zA-Z0-9.-]+?\.(?:' . $tld . '))$#';
 
         // Throw an exception if we did not match
-        if (!preg_match($pattern, $domain)) {
+        if (!preg_match($pattern, $this->domain)) {
             throw new \Exception($this->exception . 'Domain name is invalid or the TLD is not known.');
         }
     }
