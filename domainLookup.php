@@ -930,6 +930,12 @@ class DomainLookup
         // get the PTR record for that IP (gethostbyaddr) to get a domain name
         // for the mail server. We then lookup the registrar of this domain.
         $ip = gethostbyname($host);
+
+        // If the ip == host then there was a problem resolving the IP
+        if ($ip == $host) {
+            return;
+        }
+
         $mail_server = gethostbyaddr($ip);
 
         // If the mail_server == the IP then there is no PTR record
