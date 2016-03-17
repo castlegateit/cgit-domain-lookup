@@ -248,6 +248,13 @@ class DomainLookup
     private $whois = false;
 
     /**
+     * RIS WHOIS information
+     *
+     * @var bool|string
+     */
+    private $ris_whois = false;
+
+    /**
      * Domain registrar
      *
      * @var bool|string
@@ -801,21 +808,10 @@ class DomainLookup
         $a_record = reset($a_records);
         $ip = $a_record['ipv4'];
 
-        // Attempt to get a host for the IP
-        // (fails if the return value is the IP)
-        $host = gethostbyaddr($ip);
-        if ($host == $ip) {
-            return false;
+        // Perform IP WHOIS
+        if ($hosting = $this->ipWhois($ip)) {
+            $this->hosting = $hosting;
         }
-
-        // Try to create a new instance for this hostname
-        try {
-            $hosting = new static($host, $this->cache_dir, $this->cache_duration, $this->ns_whitelist);
-        }
-        catch (Exception $e) {
-            return false;
-        }
-        $this->hosting = $hosting->registrar();
 
         return $this->hosting;
     }
@@ -896,13 +892,6 @@ class DomainLookup
     }
 
     /**
-     * Returns the registrar associated with the domains email. MX records are
-     * checked, and an IP is resolved from the first MX record. The PTR record
-     * is checked to find the IP owner and it's domain is queried via WHOIS to
-     * get the registrant. This does not work well for email with large
-     * corporations who use identity protection companies, who are the
-     * registrant for their domains.
-     *
      * @return string
      */
     public function email()
@@ -927,8 +916,7 @@ class DomainLookup
         // MX records contain a domain name (usually the same domain) such as
         // mail.example.com so a standard lookup of the domain does not work
         // here. Resolve the domain to an IP address (gethostbyname) and then
-        // get the PTR record for that IP (gethostbyaddr) to get a domain name
-        // for the mail server. We then lookup the registrar of this domain.
+        // look for the owner of this IP address.
         $ip = gethostbyname($host);
 
         // If the ip == host then there was a problem resolving the IP
@@ -936,22 +924,10 @@ class DomainLookup
             return;
         }
 
-        $mail_server = gethostbyaddr($ip);
-
-        // If the mail_server == the IP then there is no PTR record
-        if ($mail_server == $ip) {
-            return false;
+        // Perform IP WHOIS
+        if ($email = $this->ipWhois($ip)) {
+            $this->email = $email;
         }
-
-        // Try to create a new instance for this hostname
-        try {
-            $mx = new static($mail_server, $this->cache_dir, $this->cache_duration, $this->ns_whitelist);
-        }
-        catch (Exception $e) {
-            return false;
-        }
-
-        $this->email = $mx->registrar();
 
         return $this->email;
     }
@@ -972,8 +948,16 @@ class DomainLookup
                 return $this->whois;
             }
 
+            $tld = $this->tld($this->domain);
+
+            // Check we have a whois server for the TLD
+            if (!isset(self::$whois_servers[$tld])) {
+                return false;
+            }
+            $whois_server = self::$whois_servers[$tld];
+
             // Query the whois servers
-            if ($result = $this->queryWhois()) {
+            if ($result = $this->queryWhois($tld, $whois_server)) {
                 $this->whois = $result;
                 $this->cacheStore('whois-' . $this->domain(), $result);
             }
@@ -983,23 +967,62 @@ class DomainLookup
     }
 
     /**
+     * Query RIR whois servers
+     *
+     * @param  integer $ip
+     * @return string|boolean
+     */
+    public function ipWhois($ip)
+    {
+
+        // Check the cache first
+        if ($cache = $this->cacheGet('whois-' . $ip)) {
+            return $cache;
+        }
+
+        // Try RIPE
+        if ($whois = $this->queryWhois($ip, 'whois.ripe.net')) {
+
+            if ($whois) {
+
+                preg_match_all('/(?:descr:\s+)(.+)/i', $whois, $matches);
+                $matches = end($matches);
+                $result = end($matches);
+
+                if ($result != 'IPv4 address block not managed by the RIPE NCC') {
+                    $this->cacheStore('whois-' . $ip, $result);
+                    return $result;
+                }
+            }
+        }
+
+        // Try ARIN
+        if ($whois = $this->queryWhois($ip, 'whois.arin.net')) {
+
+            if ($whois) {
+
+                preg_match_all('/(?:OrgName:\s+)(.+)/i', $whois, $matches);
+                $matches = end($matches);
+                $result = end($matches);
+
+                $this->cacheStore('whois-' . $ip, $result);
+                return $result;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Performs a whois query to the relevant whois server.
      *
      * @return string
      */
-    private function queryWhois()
+    private function queryWhois($query, $whois_server)
     {
         $port = 43;
 
         $timeout = 10;
-
-        $tld = $this->tld($this->domain);
-
-        // Check we have a whois server for the TLD
-        if (!isset(self::$whois_servers[$tld])) {
-            return false;
-        }
-        $whois_server = self::$whois_servers[$tld];
 
         // Open the socket
         $socket = @fsockopen(
@@ -1015,7 +1038,7 @@ class DomainLookup
         }
 
         // Send request
-        fputs($socket, $this->rootDomain() . "\r\n");
+        fputs($socket, $query . "\r\n");
 
         // Output variable
         $out = "";
