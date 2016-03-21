@@ -544,7 +544,7 @@ class DomainLookup
     {
         // Return it if we've already looked it up
         if ($this->registrar) {
-            return $this->registrar;
+            //return $this->registrar;
         }
 
         // If this is no WHOIS data already, attempt to get it
@@ -942,24 +942,24 @@ class DomainLookup
         // If we've not already checked in this instance
         if (!$this->whois) {
 
+            $root_domain = $this->rootDomain($this->domain);
+
             // Check the cache first
-            if ($cache = $this->cacheGet('whois-' . $this->domain())) {
+            if ($cache = $this->cacheGet('whois-' . $root_domain)) {
                 $this->whois = $cache;
                 return $this->whois;
             }
 
-            $tld = $this->tld($this->domain);
-
             // Check we have a whois server for the TLD
-            if (!isset(self::$whois_servers[$tld])) {
+            if (!isset(self::$whois_servers[$this->tld()])) {
                 return false;
             }
-            $whois_server = self::$whois_servers[$tld];
+            $whois_server = self::$whois_servers[$this->tld()];
 
             // Query the whois servers
-            if ($result = $this->queryWhois($tld, $whois_server)) {
+            if ($result = $this->queryWhois($root_domain, $whois_server)) {
                 $this->whois = $result;
-                $this->cacheStore('whois-' . $this->domain(), $result);
+                $this->cacheStore('whois-' . $root_domain, $result);
             }
         }
 
