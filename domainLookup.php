@@ -441,7 +441,7 @@ class DomainLookup
     public function a()
     {
         if (!$this->a) {
-            $result = $this->cleanDnsRecord(dns_get_record($this->domain, DNS_A));
+            $result = $this->cleanDnsRecord(@dns_get_record($this->domain, DNS_A));
             if (is_array($result)) {
                 $this->a = $result;
             }
@@ -458,7 +458,7 @@ class DomainLookup
     public function aaaa()
     {
         if (!$this->aaaa) {
-            $result = $this->cleanDnsRecord(dns_get_record($this->domain, DNS_AAAA));
+            $result = $this->cleanDnsRecord(@dns_get_record($this->domain, DNS_AAAA));
             if (is_array($result)) {
                 $this->aaaa = $result;
             }
@@ -475,7 +475,7 @@ class DomainLookup
     public function mx()
     {
         if (!$this->mx) {
-            $result = $this->cleanDnsRecord(dns_get_record($this->domain, DNS_MX));
+            $result = $this->cleanDnsRecord(@dns_get_record($this->domain, DNS_MX));
             if (is_array($result)) {
                 $this->mx = $result;
             }
@@ -492,7 +492,7 @@ class DomainLookup
     public function txt()
     {
         if (!$this->txt) {
-            $result = $this->cleanDnsRecord(dns_get_record($this->domain, DNS_TXT));
+            $result = $this->cleanDnsRecord(@dns_get_record($this->domain, DNS_TXT));
             if (is_array($result)) {
                 $this->txt = $result;
             }
@@ -509,7 +509,7 @@ class DomainLookup
     public function ns()
     {
         if (!$this->ns) {
-            $result = $this->cleanDnsRecord(dns_get_record($this->domain, DNS_NS));
+            $result = $this->cleanDnsRecord(@dns_get_record($this->domain, DNS_NS));
             if (is_array($result)) {
                 $this->ns = $result;
             }
@@ -526,7 +526,7 @@ class DomainLookup
     public function cname()
     {
         if (!$this->cname) {
-            $result = $this->cleanDnsRecord(dns_get_record($this->domain, DNS_CNAME));
+            $result = $this->cleanDnsRecord(@dns_get_record($this->domain, DNS_CNAME));
             if (is_array($result)) {
                 $this->cname = $result;
             }
@@ -544,7 +544,7 @@ class DomainLookup
     {
         // Return it if we've already looked it up
         if ($this->registrar) {
-            return $this->registrar;
+            //return $this->registrar;
         }
 
         // If this is no WHOIS data already, attempt to get it
@@ -942,24 +942,24 @@ class DomainLookup
         // If we've not already checked in this instance
         if (!$this->whois) {
 
+            $root_domain = $this->rootDomain($this->domain);
+
             // Check the cache first
-            if ($cache = $this->cacheGet('whois-' . $this->domain())) {
+            if ($cache = $this->cacheGet('whois-' . $root_domain)) {
                 $this->whois = $cache;
                 return $this->whois;
             }
 
-            $tld = $this->tld($this->domain);
-
             // Check we have a whois server for the TLD
-            if (!isset(self::$whois_servers[$tld])) {
+            if (!isset(self::$whois_servers[$this->tld()])) {
                 return false;
             }
-            $whois_server = self::$whois_servers[$tld];
+            $whois_server = self::$whois_servers[$this->tld()];
 
             // Query the whois servers
-            if ($result = $this->queryWhois($tld, $whois_server)) {
+            if ($result = $this->queryWhois($root_domain, $whois_server)) {
                 $this->whois = $result;
-                $this->cacheStore('whois-' . $this->domain(), $result);
+                $this->cacheStore('whois-' . $root_domain, $result);
             }
         }
 
@@ -1067,6 +1067,10 @@ class DomainLookup
      */
     private function cleanDnsRecord($array)
     {
+        if (!is_array($array)) {
+            return false;
+        }
+
         foreach ($array as $key => $value) {
 
             // Remove redundant return values
